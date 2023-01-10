@@ -5,4 +5,3 @@ todo:
 - get city and events from firebase
 - transform events to data
 - i18n
--
