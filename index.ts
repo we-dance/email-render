@@ -2,21 +2,28 @@ import { createSSRApp } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import mjml2html from 'mjml'
 import fs from 'fs'
-async function renderEmail(type, data, customUtms = {}) {
+
+async function renderEmail(type: string, data: any, customUtms = {}) {
   const template = fs.readFileSync(`./templates/${type}.mjml`, 'utf8')
+
   const defaultUtms = {
     campaign: type,
     medium: 'email',
     source: 'newsletter',
   }
-  const utm = Object.assign(Object.assign({}, defaultUtms), customUtms)
+
+  const utm = {
+    ...defaultUtms,
+    ...customUtms,
+  }
+
   const app = createSSRApp({
     data: () => {
       return data
     },
     template,
     methods: {
-      link(url, utmContent = '') {
+      link(url: string, utmContent = '') {
         return (
           url +
           '?utm_campaign=' +
@@ -31,10 +38,13 @@ async function renderEmail(type, data, customUtms = {}) {
       },
     },
   })
+
   app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('mj')
+
   return mjml2html(await renderToString(app)).html
 }
-async function getWeeklyData(city) {
+
+async function getWeeklyData(city: string) {
   const data = {
     intro:
       'Hope you had a great weekend and are ready with your dancing shoes on for a fantastic week ahead.',
@@ -116,8 +126,10 @@ async function getWeeklyData(city) {
       },
     ],
   }
+
   return data
 }
+
 const data = await getWeeklyData('Munich')
 const html = await renderEmail('weekly', data)
 fs.writeFileSync('./emails/weekly.html', html)
