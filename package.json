@@ -5,13 +5,15 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "vite-node index.js"
+    "build": "vite-node index.ts"
   },
   "dependencies": {
     "mjml": "^4.13.0",
     "vue": "^3.2.45"
   },
   "devDependencies": {
+    "@types/mjml": "^4.7.0",
+    "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
     "vite": "^4.0.1",
     "vite-node": "^0.25.7"
